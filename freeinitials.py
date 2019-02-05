@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Show initials that haven't been used in by the filenames in the current directory.
+"""Show initials that haven't been used in by the filenames in the current
+directory.
+
+This python script is replicating the functionality of a previous one written
+in bash.
 
 @author Miguel Maltez Jose
-@date 20180529
+@created 20180529
 """
 import os
 
