@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Show initials that haven't been used in by the filenames in the current
 directory.
@@ -8,18 +8,24 @@ in bash.
 
 @author Miguel Maltez Jose
 @created 20180529
+@date    20190215
 """
 import os
 
 numbers = "0123456789"
 alphabet_upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 alphabet_lower = "abcdefghijklmnopqrstuvwxyz"
-fullalphabet = "_" + numbers + alphabet_upper + alphabet_lower
+fullalphabet = numbers + alphabet_upper + "_" + alphabet_lower
 
 def main():
 	import argparse
 	parser = argparse.ArgumentParser(description="Show unused initials.")
-	parser.add_argument("--invert"
+	parser.add_argument("-i", "--caseinsensitive"
+		, help="sets the search of initials to be case insensitive"
+		, action="store_true"
+		, default=False
+	)
+	parser.add_argument("-u", "--used"
 		, help="shows used initials instead of the ones not used"
 		, action="store_true"
 	)
@@ -34,6 +40,10 @@ def main():
 		cwdfiles = files
 		break
 	used_initials = { os.path.basename(name)[0] for name in cwdfiles }
+	if args.caseinsensitive:
+		global fullalphabet
+		fullalphabet = "_" + numbers + alphabet_upper
+		used_initials = { letter.upper() for letter in used_initials }
 	# print results
 	if args.verbose:
 		for letter in fullalphabet:
@@ -42,7 +52,7 @@ def main():
 			else:
 				print("\033[2m%s\033[0m" % letter, end="")
 		print()
-	elif (args.invert):
+	elif args.used:
 		print(
 			"".join(
 				sorted(
@@ -51,10 +61,11 @@ def main():
 			)
 		)
 	else:
+		print("\033[34m", end="")
 		for letter in fullalphabet:
 			if not letter in used_initials:
 				print(letter, end="")
-		print()
+		print("\033[0m")
 
-if "__main__" == __name__:
+if __name__ == "__main__":
 	main()
